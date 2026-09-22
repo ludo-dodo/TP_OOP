@@ -1,3 +1,5 @@
+from multipledispatch import dispatch
+
 class Habitant:
     def __init__(self, nom, age, adresse, animaux=None): #initialise un nouvel objet Habitant
         self.__nom = nom
@@ -41,6 +43,16 @@ class Habitant:
     
     def compte_animal(self, animal):
         return self.get_animaux().get(animal, 0) #Renvoie le nombre d'animaux, ou 0 s'il n'est pas dans le dictionnaire
+
+    #exo6
+    @dispatch(object, str) #surchage pour string
+    def set_info(habitant, nom):
+        habitant._Habitant__nom = nom
+
+    @dispatch(object, str, int) #surcharge pour string + int
+    def set_info(habitant, nom, age):
+        habitant._Habitant__nom = nom
+        habitant._Habitant__age = age
 
 h1 = Habitant("Aldric", 25, "Rue A", {"vaches": 3})
 
