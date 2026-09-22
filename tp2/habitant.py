@@ -60,6 +60,9 @@ class Habitant(ABC):
         habitant._Habitant__nom = nom
         habitant._Habitant__age = age
 
+    def __str__(self):
+        return f"{self.get_nom()}, {self.age} ans, habite a {self.get_adresse()}"
+
 class Adulte(Habitant):
     def __init__(self, nom, prenom, age,adresse):
         if age < 18:
