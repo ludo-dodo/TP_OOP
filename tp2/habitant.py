@@ -1,11 +1,17 @@
 from multipledispatch import dispatch
+from abc import ABC, abstractmethod
 
-class Habitant:
+
+class Habitant(ABC):
     def __init__(self, nom, age, adresse, animaux=None): #initialise un nouvel objet Habitant
         self.__nom = nom
         self.__age = age
         self.__adresse = adresse
         self.__animaux = {} if animaux is None else animaux
+
+    @abstractmethod
+    def calcul_nombre_annee_avant_retraite(self):
+        pass
 
     @property
     def age(self):
@@ -54,13 +60,49 @@ class Habitant:
         habitant._Habitant__nom = nom
         habitant._Habitant__age = age
 
-h1 = Habitant("Aldric", 25, "Rue A", {"vaches": 3})
+class Adulte(Habitant):
+    def __init__(self, nom, prenom, age,adresse):
+        if age < 18:
+            raise ValueError("Un adulte doit avoir au moins 18 ans")
+        super().__init__(nom, prenom, age, adresse)
+
+    def calcul_nombre_annee_avant_retraite(self):
+        age_retraite = 62
+        if self.age >= age_retraite:
+            return "Déjà à la retraite"
+        else:
+            return age_retraite - self.age
+
+class Enfant(Habitant):
+    def __init__(self, nom, prenom, age):
+        if age >= 18:
+            raise ValueError("Un enfant doit avoir moins de 18 ans")
+        super().__init__(nom, prenom, age)
+
+    def calcul_nombre_annee_avant_retraite(self):
+        return "Erreur: Un enfant ne peut pas calculer sa retraite ne peut pas calculer sa retraite"
+
+#h1 = Habitant("Aldric", 25, "Rue A", {"vaches": 3})
 
 # Tests de validation
 assert h1.get_nom() == "Aldric"
 assert h1.compte_animal("vaches") == 3
 assert h1.compte_animal("moutons") == 0
 h1.affichage_adresse() # affiche "Aldric habite a Rue A"
+
+#test pour l'exo 7
+adulte = Adulte("Dupont","Marie", 35, "Rue A")
+enfant = Enfant("Martin","Lucas", 12, "Rue B")
+
+assert isinstance(adulte, Habitant)
+assert adulte.calcul_nombre_annee_avant_retraite() == 27
+assert "enfant" in enfant.calcul_nombre_annee_avant_retraite()
+
+try:
+    Enfant("Oups", 25, "Rue C")
+    assert False,"une ValueError aurait du etre levee"
+except ValueError:
+    pass
 
 #Tests pour la 4.2
 h1.age = 26
