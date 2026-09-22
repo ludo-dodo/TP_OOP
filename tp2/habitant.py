@@ -63,14 +63,17 @@ class Habitant(ABC):
     def __str__(self):
         return f"{self.get_nom()}, {self.age} ans, habite a {self.get_adresse()}"
 
+    def affichage(h: Habitant):
+        print(str(h))
+
 class Adulte(Habitant):
-    def __init__(self, nom, prenom, age,adresse):
+    def __init__(self, nom, prenom, age,adresse,animaux=None):
         if age < 18:
             raise ValueError("Un adulte doit avoir au moins 18 ans")
 
         nom_complet = f"{nom} {prenom}" #fusionne le nom et le prénom pour la class habitant
 
-        super().__init__(nom_complet, age, adresse)
+        super().__init__(nom_complet, age, adresse,animaux)
 
     def calcul_nombre_annee_avant_retraite(self):
         age_retraite = 62
@@ -82,7 +85,7 @@ class Adulte(Habitant):
 class Enfant(Habitant):
     def __init__(self, nom, prenom, age, adresse):
         if age >= 18:
-            raise ValueError("Un enfant doit avoir moins de 18 ans")
+            raise ValueError("un enfant doit avoir moins de 18 ans")
 
         nom_complet = f"{nom} {prenom}" #fusionne le nom et le prénom pour la class habitant
 
@@ -122,3 +125,16 @@ except ValueError:
     #assert False,"une ValueError aurait du etre levee"
 #except ValueError:
     #pass
+
+# 8.3
+# utiliser @abstractmethod empêche d'instancier un objet dérivé si la méthode 
+# n'est pas redéfinie, ce qui garantit (contrairement à un simple "pass") que tout objet 
+# passé à une fonction polymorphe possèdera bien une implémentation de cette méthode.
+
+#Test exo8
+    print("Test de __str__")
+    print(adulte) # Vérifie que print() utilise bien __str__ en interne
+    
+    print("Test de la fonction affichage")
+    affichage(adulte)
+    affichage(enfant)
